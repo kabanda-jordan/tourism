@@ -4,13 +4,13 @@ import { useState } from "react";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import HCaptcha from "@hcaptcha/react-hcaptcha";
 import { Car, Mail, Loader2, ArrowLeft } from "lucide-react";
 import { motion } from "framer-motion";
 import { forgotPasswordSchema, type ForgotPasswordInput } from "@/lib/validations/auth";
 import { forgotPassword } from "@/lib/actions/auth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Captcha } from "@/components/ui/captcha";
 import { useToast } from "@/components/ui/toast";
 
 export default function ForgotPasswordPage() {
@@ -109,14 +109,8 @@ export default function ForgotPasswordPage() {
               {...register("email")}
             />
 
-            {/* hCaptcha */}
-            <div className="flex justify-center">
-              <HCaptcha
-                sitekey={process.env.NEXT_PUBLIC_HCAPTCHA_SITE_KEY || ""}
-                onVerify={(token) => setCaptchaToken(token)}
-                theme="light"
-              />
-            </div>
+            {/* CAPTCHA */}
+            <Captcha onVerify={(token) => setCaptchaToken(token)} />
 
             <Button type="submit" fullWidth loading={loading} size="lg">
               Send Reset Code

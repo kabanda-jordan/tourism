@@ -5,7 +5,6 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import HCaptcha from "@hcaptcha/react-hcaptcha";
 import {
   Car,
   Loader2,
@@ -20,6 +19,7 @@ import { registerSchema, type RegisterInput } from "@/lib/validations/auth";
 import { signUp, signInWithGoogle, signInWithGithub } from "@/lib/actions/auth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Captcha } from "@/components/ui/captcha";
 import { useToast } from "@/components/ui/toast";
 import { cn } from "@/lib/utils";
 
@@ -347,14 +347,8 @@ export default function RegisterPage() {
               <p className="text-xs text-error">{errors.agreeToTerms.message}</p>
             )}
 
-            {/* hCaptcha */}
-            <div className="flex justify-center">
-              <HCaptcha
-                sitekey={process.env.NEXT_PUBLIC_HCAPTCHA_SITE_KEY || ""}
-                onVerify={(token) => setCaptchaToken(token)}
-                theme="light"
-              />
-            </div>
+            {/* CAPTCHA */}
+            <Captcha onVerify={(token) => setCaptchaToken(token)} />
 
             <Button type="submit" fullWidth loading={loading} size="lg">
               Create Account
