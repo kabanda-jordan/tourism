@@ -190,6 +190,17 @@ export function Navbar() {
             </div>
 
             <Link
+              href="/safari"
+              className={cn(
+                "px-3 py-2 text-sm font-medium rounded-[10px] transition-colors",
+                pathname === "/safari"
+                  ? "text-primary bg-primary/5"
+                  : "text-body hover:text-heading hover:bg-gray-50"
+              )}
+            >
+              Safari
+            </Link>
+            <Link
               href="/about"
               className={cn(
                 "px-3 py-2 text-sm font-medium rounded-[10px] transition-colors",
@@ -356,6 +367,16 @@ export function Navbar() {
                 {dest.label}
               </Link>
             ))}
+            <Link
+              href="/safari"
+              onClick={() => setMobileMenuOpen(false)}
+              className={cn(
+                "block px-3 py-2.5 text-sm font-medium rounded-[10px] transition-colors",
+                pathname === "/safari" ? "text-primary bg-primary/5" : "text-body hover:text-heading hover:bg-gray-50"
+              )}
+            >
+              Safari
+            </Link>
             <Link
               href="/about"
               onClick={() => setMobileMenuOpen(false)}

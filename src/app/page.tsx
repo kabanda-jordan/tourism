@@ -33,7 +33,7 @@ const heroSlides = [
   },
   {
     image:
-      "https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?w=1920&q=80",
+      "https://images.pexels.com/photos/34303083/pexels-photo-34303083.jpeg?auto=compress&cs=tinysrgb&w=1920",
     title: "Gorilla Trekking\nAwaits You",
     subtitle:
       "Book your vehicle and head to Volcanoes National Park for an unforgettable mountain gorilla experience.",
@@ -43,11 +43,11 @@ const heroSlides = [
       "https://images.unsplash.com/photo-1516426122078-c23e76319801?w=1920&q=80",
     title: "Safari Adventures\nAcross Rwanda",
     subtitle:
-      "From Akagera's lions and elephants to Nyungwe's chimpanzees — your wildlife journey starts here.",
+      "From Akagera's lions and giraffes to Nyungwe's chimpanzees — your wildlife journey starts here.",
   },
   {
     image:
-      "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1920&q=80",
+      "https://images.pexels.com/photos/31850571/pexels-photo-31850571.jpeg?auto=compress&cs=tinysrgb&w=1920",
     title: "Explore Lake Kivu\n& Beyond",
     subtitle:
       "Scenic drives along Rwanda's great lakes. Rent the perfect vehicle for your road trip.",
@@ -58,6 +58,13 @@ const heroSlides = [
     title: "Your Journey,\nYour Way",
     subtitle:
       "SUVs, sedans, luxury vehicles — choose the ride that matches your adventure style.",
+  },
+  {
+    image:
+      "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1920&q=80",
+    title: "Rent Your\nPerfect Ride",
+    subtitle:
+      "From city cruises to off-road adventures — Trekly has the right vehicle for every journey.",
   },
 ];
 
@@ -196,7 +203,7 @@ const popularDestinations = [
     description:
       "Home to mountain gorillas and golden monkeys. Experience unforgettable gorilla trekking.",
     image:
-      "https://images.unsplash.com/photo-1523805009345-7448845a9e53?w=800&q=80",
+      "https://images.pexels.com/photos/34303083/pexels-photo-34303083.jpeg?auto=compress&cs=tinysrgb&w=800",
     activities: ["Gorilla Trekking", "Golden Monkey Tracking", "Hiking"],
     featured: true,
   },
@@ -228,7 +235,7 @@ const popularDestinations = [
     description:
       "Stunning lakeside drives and relaxing beach towns along the Congo-Nile Trail.",
     image:
-      "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&q=80",
+      "https://images.pexels.com/photos/31850571/pexels-photo-31850571.jpeg?auto=compress&cs=tinysrgb&w=800",
     activities: ["Beach", "Kayaking", "Congo-Nile Trail"],
   },
 ];
