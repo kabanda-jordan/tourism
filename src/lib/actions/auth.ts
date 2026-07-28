@@ -60,13 +60,8 @@ export async function signUp(formData: {
   });
 
   // Send OTP via Resend
-  try {
-    const { subject, html } = otpEmail(formData.name, code);
-    await sendEmail({ to: formData.email, subject, html });
-  } catch (emailError) {
-    console.error("Failed to send verification email:", emailError);
-    // Don't block signup if email fails — user can still verify later
-  }
+  const { subject, html } = otpEmail(formData.name, code);
+  const emailResult = await sendEmail({ to: formData.email, subject, html });
 
   // Log security event (non-critical)
   try {
@@ -76,6 +71,14 @@ export async function signUp(formData: {
       metadata: { email: formData.email, role: formData.role },
     });
   } catch {}
+
+  if (emailResult.error) {
+    return {
+      success: true,
+      requiresVerification: true,
+      message: `Account created! But we couldn't send the verification email (${emailResult.error}). Please use the Resend option on the verification page.`,
+    };
+  }
 
   // Always require verification when using our custom OTP
   return {
@@ -212,7 +215,10 @@ export async function forgotPassword(formData: {
       userName,
       resetUrl
     );
-    await sendEmail({ to: formData.email, subject, html });
+    const emailResult = await sendEmail({ to: formData.email, subject, html });
+    if (emailResult.error) {
+      return { success: true, message: `If an account exists, a reset link has been sent. Note: ${emailResult.error}` };
+    }
   } catch (emailError) {
     console.error("Failed to send reset email:", emailError);
   }
@@ -330,13 +336,12 @@ export async function resendOtp(email: string, type: string) {
   });
 
   // Send via Resend
-  try {
-    const userName = user?.user_metadata?.name || "there";
-    const { subject, html } = otpEmail(userName, code);
-    await sendEmail({ to: email, subject, html });
-  } catch (emailError) {
-    console.error("Failed to resend OTP:", emailError);
-    return { error: "Failed to send email. Please try again." };
+  const userName = user?.user_metadata?.name || "there";
+  const { subject, html } = otpEmail(userName, code);
+  const emailResult = await sendEmail({ to: email, subject, html });
+
+  if (emailResult.error) {
+    return { error: `Failed to send email: ${emailResult.error}` };
   }
 
   return { success: true, message: "New verification code sent." };
@@ -435,12 +440,12 @@ export async function send2FACode() {
   });
 
   // Send via Resend
-  try {
-    const userName = user.user_metadata?.name || "there";
-    const { subject, html } = otpEmail(userName, code);
-    await sendEmail({ to: user.email, subject, html });
-  } catch {
-    return { error: "Failed to send email" };
+  const userName = user.user_metadata?.name || "there";
+  const { subject, html } = otpEmail(userName, code);
+  const emailResult = await sendEmail({ to: user.email, subject, html });
+
+  if (emailResult.error) {
+    return { error: `Failed to send email: ${emailResult.error}` };
   }
 
   return { success: true };

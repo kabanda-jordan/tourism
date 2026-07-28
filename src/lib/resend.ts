@@ -2,7 +2,8 @@ import { Resend } from "resend";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-const FROM_EMAIL = "Trekly <noreply@trekly.rw>";
+// Sandbox: use onboarding@resend.dev until you verify a domain
+const FROM_EMAIL = "Trekly <onboarding@resend.dev>";
 const APP_NAME = "Trekly";
 
 interface SendEmailParams {
@@ -21,10 +22,10 @@ export async function sendEmail({ to, subject, html }: SendEmailParams) {
 
   if (error) {
     console.error("Email send error:", error);
-    throw error;
+    return { error: error.message };
   }
 
-  return data;
+  return { data };
 }
 
 // ==================== EMAIL TEMPLATES ====================
