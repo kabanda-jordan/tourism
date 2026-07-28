@@ -1,133 +1,190 @@
 "use client";
 
 import Link from "next/link";
-import { Users, Car, DollarSign, Building, TrendingUp, TrendingDown, AlertTriangle, CheckCircle, XCircle, Clock, ArrowRight, Shield } from "lucide-react";
-import { Breadcrumbs } from "@/components/ui/breadcrumbs";
-import { Button } from "@/components/ui/button";
+import { Users, Car, DollarSign, Building, TrendingUp, TrendingDown, CheckCircle, XCircle, Clock, Shield, ArrowRight, Search, Filter } from "lucide-react";
 
-const stats = [
-  { label: "Total Users", value: "1,234", change: "+45 this month", up: true, icon: Users },
+const metrics = [
+  { label: "Total Users", value: "1,234", change: "+45", up: true, icon: Users },
   { label: "Active Bookings", value: "89", change: "+12%", up: true, icon: Car },
-  { label: "Total Revenue", value: "28.5M RWF", change: "+18%", up: true, icon: DollarSign },
-  { label: "Active Companies", value: "32", change: "+3", up: true, icon: Building },
+  { label: "Revenue MTD", value: "28.5M RWF", change: "+18%", up: true, icon: DollarSign },
+  { label: "Companies", value: "32", change: "+3", up: true, icon: Building },
 ];
 
-const pendingApprovals = [
-  { type: "company", name: "Safari Express Ltd", request: "Company registration", time: "2 hours ago" },
-  { type: "vehicle", name: "Toyota Land Cruiser 2024", request: "Vehicle listing approval", time: "5 hours ago" },
-  { type: "driver", name: "Emmanuel Habimana", request: "Driver verification", time: "1 day ago" },
+const pendingItems = [
+  { type: "Company", name: "Safari Express Ltd", item: "Registration", time: "2h ago" },
+  { type: "Vehicle", name: "Toyota Land Cruiser 2024", item: "Listing approval", time: "5h ago" },
+  { type: "Driver", name: "Emmanuel Habimana", item: "Verification", time: "1d ago" },
+  { type: "Company", name: "Kigali Premium Cars", item: "Registration", time: "2d ago" },
 ];
 
 const recentActivity = [
-  { action: "New booking", detail: "RW-A1B2C3 by John Doe", time: "30 min ago", type: "info" },
-  { action: "Payment received", detail: "325,000 RWF for RW-A1B2C3", time: "30 min ago", type: "success" },
-  { action: "Vehicle added", detail: "Mercedes-Benz E-Class by Rwanda Car Rentals", time: "2 hours ago", type: "info" },
-  { action: "Dispute filed", detail: "RW-X1Y2Z3 — vehicle condition mismatch", time: "3 hours ago", type: "warning" },
-  { action: "Company registered", detail: "Kigali Premium Cars", time: "5 hours ago", type: "info" },
+  { action: "New booking RW-A1B2C3", detail: "John Doe · Toyota RAV4 · 325,000 RWF", time: "30m ago", type: "create" },
+  { action: "Payment received", detail: "325,000 RWF — Flutterwave", time: "30m ago", type: "payment" },
+  { action: "Vehicle added", detail: "Mercedes E-Class by Rwanda Car Rentals", time: "2h ago", type: "add" },
+  { action: "Dispute filed RW-X1Y2Z3", detail: "Vehicle condition mismatch", time: "3h ago", type: "dispute" },
+  { action: "Driver verified", detail: "Emmanuel Habimana — approved", time: "4h ago", type: "approve" },
+  { action: "Company registered", detail: "Kigali Premium Cars", time: "5h ago", type: "add" },
 ];
 
 export default function AdminDashboardPage() {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-gray-50">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
-        <div className="flex items-center justify-between">
+        {/* Header */}
+        <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="text-2xl font-bold text-heading flex items-center gap-2">
-              <Shield className="w-6 h-6 text-primary" />
-              Admin Dashboard
-            </h1>
-            <p className="text-sm text-muted mt-1">Platform overview and management</p>
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 rounded-lg bg-teal-600 flex items-center justify-center">
+                <Shield className="w-4 h-4 text-white" />
+              </div>
+              <h1 className="text-xl font-bold text-gray-900">Admin Console</h1>
+            </div>
+            <p className="text-sm text-gray-500 mt-1">Platform overview — {new Date().toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" })}</p>
+          </div>
+          <div className="flex items-center gap-2">
+            <button className="flex items-center gap-1.5 px-3 py-2 rounded-lg border border-gray-200 bg-white text-sm text-gray-600 hover:bg-gray-50 transition-colors">
+              <Filter className="w-4 h-4" />
+              Filter
+            </button>
+            <button className="flex items-center gap-1.5 px-3 py-2 rounded-lg border border-gray-200 bg-white text-sm text-gray-600 hover:bg-gray-50 transition-colors">
+              <Search className="w-4 h-4" />
+              Search
+            </button>
           </div>
         </div>
 
-        {/* Stats */}
-        <div className="mt-6 grid grid-cols-2 lg:grid-cols-4 gap-4">
-          {stats.map((s) => (
-            <div key={s.label} className="bg-card rounded-[16px] border border-gray-100 shadow-sm p-4">
+        {/* KPI Cards */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          {metrics.map((m) => (
+            <div key={m.label} className="bg-white rounded-xl border border-gray-200 px-5 py-4">
               <div className="flex items-center justify-between">
-                <div className="flex items-center justify-center w-10 h-10 rounded-full bg-primary/10">
-                  <s.icon className="w-5 h-5 text-primary" />
+                <div className="w-9 h-9 rounded-lg bg-teal-50 flex items-center justify-center">
+                  <m.icon className="w-4.5 h-4.5 text-teal-600" />
                 </div>
-                <span className={`text-xs font-medium flex items-center gap-0.5 ${s.up ? "text-success" : "text-error"}`}>
-                  {s.up ? <TrendingUp className="w-3 h-3" /> : <TrendingDown className="w-3 h-3" />}
-                  {s.change}
+                <span className={`text-xs font-semibold flex items-center gap-0.5 ${m.up ? "text-emerald-600" : "text-red-600"}`}>
+                  {m.up ? <TrendingUp className="w-3 h-3" /> : <TrendingDown className="w-3 h-3" />}
+                  {m.change}
                 </span>
               </div>
-              <p className="mt-3 text-2xl font-bold text-heading">{s.value}</p>
-              <p className="text-xs text-muted">{s.label}</p>
+              <p className="mt-3 text-2xl font-bold text-gray-900">{m.value}</p>
+              <p className="text-xs text-gray-500 mt-0.5">{m.label}</p>
             </div>
           ))}
         </div>
 
+        {/* Two Column Layout */}
         <div className="mt-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Pending Approvals */}
-          <div className="lg:col-span-2 bg-card rounded-[16px] border border-gray-100 shadow-sm p-6">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-semibold text-heading">Pending Approvals</h2>
-              <Link href="/admin/verifications" className="text-sm text-primary hover:underline flex items-center gap-1">
-                View all <ArrowRight className="w-3 h-3" />
-              </Link>
-            </div>
-            <div className="space-y-3">
-              {pendingApprovals.map((a, i) => (
-                <div key={i} className="flex items-center gap-4 p-3 rounded-[12px] bg-warning/5 border border-warning/10">
-                  <div className="w-10 h-10 rounded-full bg-warning/10 flex items-center justify-center shrink-0">
-                    <Clock className="w-5 h-5 text-warning" />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-heading">{a.name}</p>
-                    <p className="text-xs text-muted">{a.request} · {a.time}</p>
-                  </div>
-                  <div className="flex gap-1 shrink-0">
-                    <button className="p-1.5 rounded-lg bg-success/10 hover:bg-success/20">
-                      <CheckCircle className="w-4 h-4 text-success" />
-                    </button>
-                    <button className="p-1.5 rounded-lg bg-error/10 hover:bg-error/20">
-                      <XCircle className="w-4 h-4 text-error" />
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Recent Activity */}
-          <div className="bg-card rounded-[16px] border border-gray-100 shadow-sm p-6">
-            <h2 className="text-lg font-semibold text-heading mb-4">Recent Activity</h2>
-            <div className="space-y-3">
-              {recentActivity.map((a, i) => (
-                <div key={i} className="flex items-start gap-3">
-                  <div className={`w-2 h-2 rounded-full mt-1.5 shrink-0 ${
-                    a.type === "success" ? "bg-success" : a.type === "warning" ? "bg-warning" : "bg-primary"
-                  }`} />
-                  <div>
-                    <p className="text-sm font-medium text-heading">{a.action}</p>
-                    <p className="text-xs text-muted">{a.detail}</p>
-                    <p className="text-[10px] text-muted mt-0.5">{a.time}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* Quick Actions */}
-        <div className="mt-6 grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-3">
-          {[
-            { label: "Users", href: "/admin/users", icon: Users },
-            { label: "Companies", href: "/admin/companies", icon: Building },
-            { label: "Vehicles", href: "/admin/vehicles", icon: Car },
-            { label: "Payments", href: "/admin/payments", icon: DollarSign },
-            { label: "Verifications", href: "/admin/verifications", icon: AlertTriangle },
-            { label: "Settings", href: "/admin/settings", icon: Shield },
-          ].map((a) => (
-            <Link key={a.href} href={a.href}>
-              <div className="bg-card rounded-[16px] border border-gray-100 shadow-sm p-4 text-center hover:shadow-md transition-shadow">
-                <a.icon className="w-5 h-5 text-primary mx-auto" />
-                <p className="mt-2 text-xs font-medium text-heading">{a.label}</p>
+          {/* Pending & Activity — span 2 */}
+          <div className="lg:col-span-2 space-y-6">
+            {/* Pending Approvals */}
+            <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
+              <div className="px-5 py-4 border-b border-gray-100 flex items-center justify-between">
+                <h2 className="font-semibold text-gray-900 flex items-center gap-2">
+                  <Clock className="w-4 h-4 text-amber-500" />
+                  Pending Approvals
+                  <span className="text-[11px] font-medium text-amber-600 bg-amber-50 px-2 py-0.5 rounded-full">4</span>
+                </h2>
+                <Link href="/admin/verifications" className="text-sm text-teal-600 hover:text-teal-700 font-medium">
+                  View all →
+                </Link>
               </div>
-            </Link>
-          ))}
+              <div className="divide-y divide-gray-50">
+                {pendingItems.map((item, i) => (
+                  <div key={i} className="px-5 py-3.5 flex items-center gap-4 hover:bg-gray-50 transition-colors">
+                    <div className="w-8 h-8 rounded-lg bg-amber-50 flex items-center justify-center shrink-0">
+                      <Clock className="w-4 h-4 text-amber-500" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium text-gray-900">{item.name}</p>
+                      <p className="text-xs text-gray-500">{item.type} · {item.item} · {item.time}</p>
+                    </div>
+                    <div className="flex gap-1.5 shrink-0">
+                      <button className="p-1.5 rounded-lg bg-emerald-50 hover:bg-emerald-100 transition-colors">
+                        <CheckCircle className="w-4 h-4 text-emerald-600" />
+                      </button>
+                      <button className="p-1.5 rounded-lg bg-red-50 hover:bg-red-100 transition-colors">
+                        <XCircle className="w-4 h-4 text-red-500" />
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Recent System Activity */}
+            <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
+              <div className="px-5 py-4 border-b border-gray-100">
+                <h2 className="font-semibold text-gray-900">System Activity</h2>
+              </div>
+              <div className="divide-y divide-gray-50">
+                {recentActivity.map((a, i) => (
+                  <div key={i} className="px-5 py-3 flex items-start gap-3 hover:bg-gray-50 transition-colors">
+                    <div className={`w-2 h-2 rounded-full mt-1.5 shrink-0 ${
+                      a.type === "payment" ? "bg-emerald-400" :
+                      a.type === "dispute" ? "bg-amber-400" :
+                      a.type === "approve" ? "bg-blue-400" :
+                      a.type === "add" ? "bg-purple-400" : "bg-gray-400"
+                    }`} />
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium text-gray-900">{a.action}</p>
+                      <p className="text-xs text-gray-500 mt-0.5">{a.detail}</p>
+                    </div>
+                    <span className="text-[11px] text-gray-400 shrink-0">{a.time}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Sidebar */}
+          <div className="space-y-6">
+            {/* Platform Health */}
+            <div className="bg-white rounded-xl border border-gray-200 p-5">
+              <h2 className="font-semibold text-gray-900 mb-4">Platform Health</h2>
+              <div className="space-y-3">
+                {[
+                  { label: "Uptime", value: "99.9%", color: "emerald" },
+                  { label: "API Response", value: "210ms", color: "emerald" },
+                  { label: "Active Users", value: "342", color: "blue" },
+                  { label: "Error Rate", value: "0.02%", color: "emerald" },
+                ].map((h) => (
+                  <div key={h.label} className="flex items-center justify-between">
+                    <p className="text-sm text-gray-600">{h.label}</p>
+                    <div className="flex items-center gap-2">
+                      <div className={`w-1.5 h-1.5 rounded-full bg-${h.color}-400`} />
+                      <span className={`text-sm font-semibold text-${h.color}-600`}>{h.value}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Quick Access */}
+            <div className="bg-white rounded-xl border border-gray-200 p-5">
+              <h2 className="font-semibold text-gray-900 mb-4">Quick Access</h2>
+              <div className="space-y-1">
+                {[
+                  { label: "Users", href: "/admin/users", icon: Users },
+                  { label: "Companies", href: "/admin/companies", icon: Building },
+                  { label: "Vehicles", href: "/admin/vehicles", icon: Car },
+                  { label: "Payments", href: "/admin/payments", icon: DollarSign },
+                  { label: "Verifications", href: "/admin/verifications", icon: Clock },
+                ].map((l) => (
+                  <Link key={l.href} href={l.href}>
+                    <div className="flex items-center justify-between px-3 py-2.5 rounded-lg hover:bg-gray-50 transition-colors">
+                      <div className="flex items-center gap-3">
+                        <div className="w-7 h-7 rounded-md bg-teal-50 flex items-center justify-center">
+                          <l.icon className="w-3.5 h-3.5 text-teal-600" />
+                        </div>
+                        <span className="text-sm font-medium text-gray-700">{l.label}</span>
+                      </div>
+                      <ArrowRight className="w-3.5 h-3.5 text-gray-300" />
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
