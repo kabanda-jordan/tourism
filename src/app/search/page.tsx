@@ -21,7 +21,7 @@ const mockVehicles = [
   {
     id: "1",
     title: "Toyota Land Cruiser V8",
-    images: ["https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=800&q=80"],
+    images: ["/images/vehicles/land-cruiser-v8.jpg"],
     category: "suv",
     transmission: "automatic",
     seats: 7,
@@ -35,7 +35,7 @@ const mockVehicles = [
   {
     id: "2",
     title: "Mercedes-Benz GLC 300",
-    images: ["https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=800&q=80"],
+    images: ["/images/vehicles/mercedes-glc.jpg"],
     category: "luxury",
     transmission: "automatic",
     seats: 5,
@@ -49,7 +49,7 @@ const mockVehicles = [
   {
     id: "3",
     title: "Toyota Hiace Commuter",
-    images: ["https://images.unsplash.com/photo-1570125909232-eb263c188f7e?w=800&q=80"],
+    images: ["/images/vehicles/hiace-commuter.jpg"],
     category: "van",
     transmission: "manual",
     seats: 14,
@@ -62,7 +62,7 @@ const mockVehicles = [
   {
     id: "4",
     title: "Subaru Forester",
-    images: ["https://images.unsplash.com/photo-1502877338535-766e1452684a?w=800&q=80"],
+    images: ["/images/vehicles/subaru-forester.jpg"],
     category: "suv",
     transmission: "automatic",
     seats: 5,
@@ -75,7 +75,7 @@ const mockVehicles = [
   {
     id: "5",
     title: "Nissan Patrol Safari",
-    images: ["https://images.unsplash.com/photo-1609521263047-f8f205293f24?w=800&q=80"],
+    images: ["/images/vehicles/coaster-bus.jpg"],
     category: "suv",
     transmission: "automatic",
     seats: 7,
@@ -89,7 +89,7 @@ const mockVehicles = [
   {
     id: "6",
     title: "Toyota RAV4",
-    images: ["https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?w=800&q=80"],
+    images: ["/images/vehicles/corolla.jpg"],
     category: "suv",
     transmission: "automatic",
     seats: 5,
@@ -102,7 +102,7 @@ const mockVehicles = [
   {
     id: "7",
     title: "Range Rover Sport",
-    images: ["https://images.unsplash.com/photo-1530046339160-ce3e530c7d2f?w=800&q=80"],
+    images: ["/images/vehicles/range-rover-sport.jpg"],
     category: "luxury",
     transmission: "automatic",
     seats: 5,
@@ -116,7 +116,7 @@ const mockVehicles = [
   {
     id: "8",
     title: "Toyota Corolla",
-    images: ["https://images.unsplash.com/photo-1590362891991-f776e747a588?w=800&q=80"],
+    images: ["/images/vehicles/defender.jpg"],
     category: "sedan",
     transmission: "automatic",
     seats: 5,

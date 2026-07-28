@@ -66,7 +66,7 @@ const featuredVehicles = [
     id: "1",
     title: "Toyota Land Cruiser V8",
     images: [
-      "https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=800&q=80",
+      "/images/vehicles/land-cruiser-v8.jpg",
     ],
     category: "suv",
     transmission: "automatic",
@@ -82,7 +82,7 @@ const featuredVehicles = [
     id: "2",
     title: "Mercedes-Benz GLC 300",
     images: [
-      "https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=800&q=80",
+      "/images/vehicles/mercedes-glc.jpg",
     ],
     category: "luxury",
     transmission: "automatic",
@@ -98,7 +98,7 @@ const featuredVehicles = [
     id: "3",
     title: "Toyota Hiace Commuter",
     images: [
-      "https://images.unsplash.com/photo-1570125909232-eb263c188f7e?w=800&q=80",
+      "/images/vehicles/hiace-commuter.jpg",
     ],
     category: "van",
     transmission: "manual",
@@ -113,7 +113,7 @@ const featuredVehicles = [
     id: "4",
     title: "Subaru Forester",
     images: [
-      "https://images.unsplash.com/photo-1502877338535-766e1452684a?w=800&q=80",
+      "/images/vehicles/subaru-forester.jpg",
     ],
     category: "suv",
     transmission: "automatic",
@@ -128,7 +128,7 @@ const featuredVehicles = [
     id: "5",
     title: "Toyota Corolla",
     images: [
-      "https://images.unsplash.com/photo-1590362891991-f776e747a588?w=800&q=80",
+      "/images/vehicles/corolla.jpg",
     ],
     category: "sedan",
     transmission: "automatic",
@@ -143,7 +143,7 @@ const featuredVehicles = [
     id: "6",
     title: "Range Rover Sport",
     images: [
-      "https://images.unsplash.com/photo-1530046339160-ce3e530c7d2f?w=800&q=80",
+      "/images/vehicles/range-rover-sport.jpg",
     ],
     category: "luxury",
     transmission: "automatic",
@@ -159,7 +159,7 @@ const featuredVehicles = [
     id: "7",
     title: "Toyota Coaster Bus",
     images: [
-      "https://images.unsplash.com/photo-1547394765-185e1e68f34e?w=800&q=80",
+      "/images/vehicles/coaster-bus.jpg",
     ],
     category: "bus",
     transmission: "manual",
@@ -174,7 +174,7 @@ const featuredVehicles = [
     id: "8",
     title: "Land Rover Defender",
     images: [
-      "https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?w=800&q=80",
+      "/images/vehicles/defender.jpg",
     ],
     category: "suv",
     transmission: "manual",

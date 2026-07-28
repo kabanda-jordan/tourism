@@ -12,7 +12,7 @@ const vehicles = [
   {
     id: "1",
     title: "Toyota Land Cruiser V8",
-    images: ["https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=800&q=80"],
+    images: ["/images/vehicles/land-cruiser-v8.jpg"],
     category: "SUV",
     transmission: "Automatic",
     seats: 7,
@@ -26,7 +26,7 @@ const vehicles = [
   {
     id: "2",
     title: "Mercedes-Benz GLC 300",
-    images: ["https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=800&q=80"],
+    images: ["/images/vehicles/mercedes-glc.jpg"],
     category: "Luxury",
     transmission: "Automatic",
     seats: 5,
@@ -40,7 +40,7 @@ const vehicles = [
   {
     id: "3",
     title: "Toyota Hiace Commuter",
-    images: ["https://images.unsplash.com/photo-1570125909232-eb263c188f7e?w=800&q=80"],
+    images: ["/images/vehicles/hiace-commuter.jpg"],
     category: "Van",
     transmission: "Manual",
     seats: 14,
@@ -53,7 +53,7 @@ const vehicles = [
   {
     id: "4",
     title: "Subaru Forester",
-    images: ["https://images.unsplash.com/photo-1502877338535-766e1452684a?w=800&q=80"],
+    images: ["/images/vehicles/subaru-forester.jpg"],
     category: "SUV",
     transmission: "Automatic",
     seats: 5,
@@ -66,7 +66,7 @@ const vehicles = [
   {
     id: "5",
     title: "Toyota Coaster Bus",
-    images: ["https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=800&q=80"],
+    images: ["/images/vehicles/coaster-bus.jpg"],
     category: "Bus",
     transmission: "Manual",
     seats: 30,
@@ -79,7 +79,7 @@ const vehicles = [
   {
     id: "6",
     title: "Range Rover Sport",
-    images: ["https://images.unsplash.com/photo-1530046339160-ce3e530c7d2f?w=800&q=80"],
+    images: ["/images/vehicles/range-rover-sport.jpg"],
     category: "Luxury",
     transmission: "Automatic",
     seats: 5,
@@ -93,7 +93,7 @@ const vehicles = [
   {
     id: "7",
     title: "Nissan Patrol",
-    images: ["https://images.unsplash.com/photo-1609521263047-f8f205293f24?w=800&q=80"],
+    images: ["/images/vehicles/defender.jpg"],
     category: "SUV",
     transmission: "Automatic",
     seats: 7,
@@ -106,7 +106,7 @@ const vehicles = [
   {
     id: "8",
     title: "Hyundai Staria",
-    images: ["https://images.unsplash.com/photo-1619767886558-efdc259cde1a?w=800&q=80"],
+    images: ["/images/vehicles/corolla.jpg"],
     category: "Van",
     transmission: "Automatic",
     seats: 11,
