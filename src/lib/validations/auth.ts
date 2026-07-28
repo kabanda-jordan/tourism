@@ -44,8 +44,8 @@ export type ForgotPasswordInput = z.infer<typeof forgotPasswordSchema>;
 export const verifyOtpSchema = z.object({
   code: z
     .string()
-    .length(6, "Code must be exactly 6 digits")
-    .regex(/^\d{6}$/, "Code must contain only digits"),
+    .length(8, "Code must be exactly 8 characters")
+    .regex(/^[A-Z0-9]+$/, "Code must contain only uppercase letters and numbers"),
 });
 
 export type VerifyOtpInput = z.infer<typeof verifyOtpSchema>;

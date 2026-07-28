@@ -6,7 +6,12 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { sendEmail, otpEmail, welcomeEmail } from "@/lib/resend";
 
 function generateOtp(): string {
-  return Math.floor(100000 + Math.random() * 900000).toString();
+  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+  let code = "";
+  for (let i = 0; i < 8; i++) {
+    code += chars[Math.floor(Math.random() * chars.length)];
+  }
+  return code;
 }
 
 // ==================== SIGN UP ====================
@@ -383,6 +388,101 @@ export async function getProfile() {
     .maybeSingle();
 
   return data;
+}
+
+// ==================== 2FA ====================
+export async function toggle2FA(enabled: boolean, method: "totp" | "email" = "email") {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return { error: "Not authenticated" };
+
+  const adminClient = createAdminClient();
+  const { error } = await adminClient
+    .from("profiles")
+    .update({
+      two_factor_enabled: enabled,
+      two_factor_method: enabled ? method : null,
+    })
+    .eq("id", user.id);
+
+  if (error) return { error: error.message };
+  return { success: true };
+}
+
+export async function send2FACode() {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user?.email) return { error: "Not authenticated" };
+
+  const code = Math.floor(100000 + Math.random() * 900000).toString();
+  const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
+
+  // Store code in verification_codes
+  const adminClient = createAdminClient();
+  await adminClient
+    .from("verification_codes")
+    .update({ used: true })
+    .eq("email", user.email)
+    .eq("type", "2fa")
+    .eq("used", false);
+
+  await adminClient.from("verification_codes").insert({
+    user_id: user.id,
+    email: user.email,
+    code,
+    type: "2fa",
+    expires_at: expiresAt.toISOString(),
+  });
+
+  // Send via Resend
+  try {
+    const userName = user.user_metadata?.name || "there";
+    const { subject, html } = otpEmail(userName, code);
+    await sendEmail({ to: user.email, subject, html });
+  } catch {
+    return { error: "Failed to send email" };
+  }
+
+  return { success: true };
+}
+
+export async function verify2FA(code: string) {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user?.email) return { error: "Not authenticated" };
+
+  const adminClient = createAdminClient();
+  const { data: stored } = await adminClient
+    .from("verification_codes")
+    .select("*")
+    .eq("email", user.email)
+    .eq("type", "2fa")
+    .eq("used", false)
+    .order("created_at", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+
+  if (!stored) return { error: "No verification code found. Request a new code." };
+  if (stored.used) return { error: "Code already used" };
+  if (new Date(stored.expires_at) < new Date()) return { error: "Code expired" };
+  if (stored.code !== code) return { error: "Invalid code" };
+
+  await adminClient
+    .from("verification_codes")
+    .update({ used: true })
+    .eq("id", stored.id);
+
+  // Get profile for redirect
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("role")
+    .eq("id", user.id)
+    .maybeSingle();
+
+  return {
+    success: true,
+    redirectUrl: getRedirectUrl(profile?.role),
+  };
 }
 
 // ==================== HELPERS ====================

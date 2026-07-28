@@ -199,17 +199,14 @@ export default function LoginPageClient() {
               </Link>
             </div>
 
-            {/* hCaptcha — only render if site key is configured */}
-            {process.env.NEXT_PUBLIC_HCAPTCHA_SITE_KEY &&
-              process.env.NEXT_PUBLIC_HCAPTCHA_SITE_KEY !== "your-hcaptcha-site-key" && (
-                <div className="flex justify-center">
-                  <HCaptcha
-                    sitekey={process.env.NEXT_PUBLIC_HCAPTCHA_SITE_KEY}
-                    onVerify={(token) => setCaptchaToken(token)}
-                    theme="light"
-                  />
-                </div>
-              )}
+            {/* hCaptcha */}
+            <div className="flex justify-center">
+              <HCaptcha
+                sitekey={process.env.NEXT_PUBLIC_HCAPTCHA_SITE_KEY || ""}
+                onVerify={(token) => setCaptchaToken(token)}
+                theme="light"
+              />
+            </div>
 
             <Button type="submit" fullWidth loading={loading} size="lg">
               Log In

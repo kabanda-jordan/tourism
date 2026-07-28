@@ -10,6 +10,8 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/toast";
 import { cn } from "@/lib/utils";
 
+const CODE_LENGTH = 8;
+
 export default function VerifyOTPClient() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -17,7 +19,7 @@ export default function VerifyOTPClient() {
   const type = searchParams.get("type") || "signup";
   const { toast } = useToast();
 
-  const [code, setCode] = useState(["", "", "", "", "", ""]);
+  const [code, setCode] = useState(Array(CODE_LENGTH).fill(""));
   const [loading, setLoading] = useState(false);
   const [resendCooldown, setResendCooldown] = useState(60);
   const [canResend, setCanResend] = useState(false);
@@ -32,20 +34,19 @@ export default function VerifyOTPClient() {
     }
   }, [resendCooldown]);
 
+  const sanitize = (val: string) => val.toUpperCase().replace(/[^A-Z0-9]/g, "");
+
   const handleChange = (index: number, value: string) => {
-    if (value.length > 1) {
-      // Handle paste
-      const pasted = value.replace(/[^0-9]/g, "").slice(0, 6).split("");
+    const cleaned = sanitize(value);
+    if (cleaned.length > 1) {
       const newCode = [...code];
-      pasted.forEach((char, i) => {
-        if (index + i < 6) {
-          newCode[index + i] = char;
-        }
+      const chars = cleaned.slice(0, CODE_LENGTH).split("");
+      chars.forEach((char, i) => {
+        if (index + i < CODE_LENGTH) newCode[index + i] = char;
       });
       setCode(newCode);
-      const nextIndex = Math.min(index + pasted.length, 5);
+      const nextIndex = Math.min(index + chars.length, CODE_LENGTH - 1);
       inputRefs.current[nextIndex]?.focus();
-      // Auto-verify if all 6 digits entered
       if (newCode.every((d) => d !== "")) {
         handleVerifyWithCode(newCode.join(""));
       }
@@ -53,14 +54,11 @@ export default function VerifyOTPClient() {
     }
 
     const newCode = [...code];
-    newCode[index] = value;
+    newCode[index] = cleaned.slice(0, 1);
     setCode(newCode);
-
-    if (value && index < 5) {
+    if (cleaned && index < CODE_LENGTH - 1) {
       inputRefs.current[index + 1]?.focus();
     }
-
-    // Auto-verify if all 6 digits entered
     if (newCode.every((d) => d !== "")) {
       handleVerifyWithCode(newCode.join(""));
     }
@@ -73,8 +71,8 @@ export default function VerifyOTPClient() {
   };
 
   const handleVerifyWithCode = useCallback(async (fullCode: string) => {
-    if (fullCode.length !== 6) {
-      toast("error", "Please enter the complete 6-digit code");
+    if (fullCode.length !== CODE_LENGTH) {
+      toast("error", `Please enter the complete ${CODE_LENGTH}-character code`);
       return;
     }
 
@@ -88,7 +86,7 @@ export default function VerifyOTPClient() {
 
       if (result.error) {
         toast("error", result.error);
-        setCode(["", "", "", "", "", ""]);
+        setCode(Array(CODE_LENGTH).fill(""));
         inputRefs.current[0]?.focus();
         return;
       }
@@ -97,12 +95,11 @@ export default function VerifyOTPClient() {
       if (type === "recovery") {
         router.push("/auth/reset-password");
       } else {
-        // Redirect to role-based dashboard
         router.push(result.redirectUrl || "/dashboard/tourist");
       }
     } catch {
       toast("error", "Verification failed");
-      setCode(["", "", "", "", "", ""]);
+      setCode(Array(CODE_LENGTH).fill(""));
       inputRefs.current[0]?.focus();
     } finally {
       setLoading(false);
@@ -140,28 +137,28 @@ export default function VerifyOTPClient() {
           </Link>
           <h1 className="mt-6 text-2xl font-bold text-heading">Verify Your Email</h1>
           <p className="mt-2 text-sm text-muted">
-            Enter the 6-digit code sent to{" "}
+            Enter the 8-character code sent to{" "}
             <span className="font-medium text-heading">{email || "your email"}</span>
           </p>
         </div>
 
         <div className="bg-card rounded-[16px] border border-gray-100 shadow-sm p-6">
-          {/* OTP Input — 6 digits */}
-          <div className="flex justify-center gap-2">
-            {code.map((digit, i) => (
+          {/* OTP Input — 8 chars */}
+          <div className="flex justify-center gap-1.5">
+            {code.map((char, i) => (
               <input
                 key={i}
                 ref={(el) => { inputRefs.current[i] = el; }}
                 type="text"
-                inputMode="numeric"
-                maxLength={6}
-                value={digit}
-                onChange={(e) => handleChange(i, e.target.value.replace(/[^0-9]/g, ""))}
+                inputMode="text"
+                maxLength={1}
+                value={char}
+                onChange={(e) => handleChange(i, e.target.value)}
                 onKeyDown={(e) => handleKeyDown(i, e)}
                 className={cn(
-                  "w-12 h-14 text-center text-xl font-mono font-bold border-2 rounded-[12px] transition-colors",
+                  "w-10 h-13 text-center text-lg font-mono font-bold border-2 rounded-[10px] transition-colors",
                   "focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20",
-                  digit ? "border-primary bg-primary/5" : "border-gray-200"
+                  char ? "border-primary bg-primary/5" : "border-gray-200"
                 )}
               />
             ))}

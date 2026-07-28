@@ -54,6 +54,7 @@ export async function updateSession(request: NextRequest) {
   );
 
   // Auth routes that authenticated users should be redirected away from
+  // verify-2fa is excluded because users need an active session to complete 2FA
   const authRoutes = ["/auth/login", "/auth/register", "/auth/forgot-password"];
   const isAuthRoute = authRoutes.some((route) =>
     request.nextUrl.pathname.startsWith(route)
