@@ -149,13 +149,12 @@ export async function signIn(formData: {
 }
 
 // ==================== SIGN IN WITH OAUTH ====================
-export async function signInWithGoogle() {
+export async function signInWithGoogle(origin?: string) {
   const supabase = await createClient();
+  const redirectTo = `${origin || process.env.NEXT_PUBLIC_APP_URL || "https://tourism-eight-bice.vercel.app"}/auth/callback`;
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: "google",
-    options: {
-      redirectTo: `${process.env.NEXT_PUBLIC_APP_URL}/auth/callback`,
-    },
+    options: { redirectTo },
   });
 
   if (error) {
@@ -167,13 +166,12 @@ export async function signInWithGoogle() {
   }
 }
 
-export async function signInWithGithub() {
+export async function signInWithGithub(origin?: string) {
   const supabase = await createClient();
+  const redirectTo = `${origin || process.env.NEXT_PUBLIC_APP_URL || "https://tourism-eight-bice.vercel.app"}/auth/callback`;
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: "github",
-    options: {
-      redirectTo: `${process.env.NEXT_PUBLIC_APP_URL}/auth/callback`,
-    },
+    options: { redirectTo },
   });
 
   if (error) {

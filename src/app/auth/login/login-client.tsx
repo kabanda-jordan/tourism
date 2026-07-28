@@ -71,9 +71,9 @@ export default function LoginPageClient() {
     setOauthLoading(provider);
     try {
       if (provider === "google") {
-        await signInWithGoogle();
+        await signInWithGoogle(window.location.origin);
       } else {
-        await signInWithGithub();
+        await signInWithGithub(window.location.origin);
       }
     } catch {
       // redirect() throws, which is expected — ignore it

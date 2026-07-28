@@ -153,9 +153,9 @@ export default function RegisterPage() {
     setOauthLoading(provider);
     try {
       if (provider === "google") {
-        await signInWithGoogle();
+        await signInWithGoogle(window.location.origin);
       } else {
-        await signInWithGithub();
+        await signInWithGithub(window.location.origin);
       }
     } catch {
       toast("error", `Failed to sign in with ${provider}`);
