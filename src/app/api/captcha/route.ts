@@ -11,7 +11,7 @@ function generateCode(): string {
 }
 
 function generateSVG(code: string): string {
-  const colors = ["#2563EB", "#DC2626", "#059669", "#D97706", "#7C3AED", "#DB2777"];
+  const grays = ["#111827", "#374151", "#6B7280", "#9CA3AF", "#4B5563", "#1F2937"];
   const w = 240;
   const h = 72;
 
@@ -19,7 +19,7 @@ function generateSVG(code: string): string {
     const x = 30 + i * 42 + Math.random() * 14;
     const y = 44 + Math.random() * 14;
     const angle = (Math.random() - 0.5) * 30;
-    const color = colors[i % colors.length];
+    const color = grays[i % grays.length];
     const size = 28 + Math.random() * 8;
     return `<text x="${x}" y="${y}" transform="rotate(${angle},${x},${y})" font-family="monospace" font-size="${size}" font-weight="bold" fill="${color}" opacity="0.85">${ch}</text>`;
   }).join("");
@@ -29,22 +29,22 @@ function generateSVG(code: string): string {
     const y1 = Math.random() * h;
     const x2 = Math.random() * w;
     const y2 = Math.random() * h;
-    const stroke = colors[Math.floor(Math.random() * colors.length)];
-    return `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${stroke}" stroke-width="${1 + Math.random() * 2}" opacity="0.3"/>`;
+    const stroke = grays[Math.floor(Math.random() * grays.length)];
+    return `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${stroke}" stroke-width="${1 + Math.random() * 2}" opacity="0.25"/>`;
   }).join("");
 
   const dots = Array.from({ length: 40 }, () => {
     const cx = Math.random() * w;
     const cy = Math.random() * h;
     const r = 1 + Math.random() * 2;
-    const color = colors[Math.floor(Math.random() * colors.length)];
-    return `<circle cx="${cx}" cy="${cy}" r="${r}" fill="${color}" opacity="0.4"/>`;
+    const color = grays[Math.floor(Math.random() * grays.length)];
+    return `<circle cx="${cx}" cy="${cy}" r="${r}" fill="${color}" opacity="0.3"/>`;
   }).join("");
 
-  const wave = `<path d="M0 ${h * 0.7} Q${w * 0.25} ${h * 0.3} ${w * 0.5} ${h * 0.7} T${w} ${h * 0.7}" fill="none" stroke="#94A3B8" stroke-width="1.5" opacity="0.25"/>`;
+  const wave = `<path d="M0 ${h * 0.7} Q${w * 0.25} ${h * 0.3} ${w * 0.5} ${h * 0.7} T${w} ${h * 0.7}" fill="none" stroke="#D1D5DB" stroke-width="1.5" opacity="0.4"/>`;
 
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}">
-    <rect width="${w}" height="${h}" fill="#F8FAFC" rx="8"/>
+    <rect width="${w}" height="${h}" fill="#FFFFFF" rx="8"/>
     ${wave}
     ${lines}
     ${dots}
