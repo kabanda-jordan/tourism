@@ -23,8 +23,7 @@ const destinations = [
 
 export default function TouristDashboardPage() {
   return (
-    <div className="min-h-screen" style={{ background: "linear-gradient(180deg, #FFFBEB 0%, #FFFFFF 100%)" }}>
-      {/* Hero */}
+    <>{/* Hero */}
       <div className="relative overflow-hidden" style={{ background: "linear-gradient(135deg, #F59E0B 0%, #D97706 100%)" }}>
         <div className="absolute inset-0 opacity-10" style={{ backgroundImage: "radial-gradient(circle at 25px 25px, white 2px, transparent 0)", backgroundSize: "50px 50px" }} />
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10">
@@ -166,8 +165,8 @@ export default function TouristDashboardPage() {
               </div>
             </div>
           </div>
-        </div>
       </div>
     </div>
+    </>
   );
 }

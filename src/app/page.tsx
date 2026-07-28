@@ -47,7 +47,7 @@ const heroSlides = [
   },
   {
     image:
-      "https://images.unsplash.com/photo-1534759926189-ee5c5a3ddeee?w=1920&q=80",
+      "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1920&q=80",
     title: "Explore Lake Kivu\n& Beyond",
     subtitle:
       "Scenic drives along Rwanda's great lakes. Rent the perfect vehicle for your road trip.",
@@ -66,7 +66,7 @@ const featuredVehicles = [
     id: "1",
     title: "Toyota Land Cruiser V8",
     images: [
-      "https://images.unsplash.com/photo-1594611396050-13d7dc4bf0dc?w=800&q=80",
+      "https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=800&q=80",
     ],
     category: "suv",
     transmission: "automatic",
@@ -113,7 +113,7 @@ const featuredVehicles = [
     id: "4",
     title: "Subaru Forester",
     images: [
-      "https://images.unsplash.com/photo-1568844293986-8d0400f4745b?w=800&q=80",
+      "https://images.unsplash.com/photo-1502877338535-766e1452684a?w=800&q=80",
     ],
     category: "suv",
     transmission: "automatic",
@@ -123,6 +123,68 @@ const featuredVehicles = [
     location: "Kigali",
     rating: 4.6,
     totalReviews: 42,
+  },
+  {
+    id: "5",
+    title: "Toyota Corolla",
+    images: [
+      "https://images.unsplash.com/photo-1590362891991-f776e747a588?w=800&q=80",
+    ],
+    category: "sedan",
+    transmission: "automatic",
+    seats: 5,
+    fuelType: "petrol",
+    pricePerDay: 35000,
+    location: "Kigali",
+    rating: 4.5,
+    totalReviews: 98,
+  },
+  {
+    id: "6",
+    title: "Range Rover Sport",
+    images: [
+      "https://images.unsplash.com/photo-1530046339160-ce3e530c7d2f?w=800&q=80",
+    ],
+    category: "luxury",
+    transmission: "automatic",
+    seats: 5,
+    fuelType: "diesel",
+    pricePerDay: 150000,
+    location: "Kigali",
+    rating: 4.9,
+    totalReviews: 73,
+    isFeatured: true,
+  },
+  {
+    id: "7",
+    title: "Toyota Coaster Bus",
+    images: [
+      "https://images.unsplash.com/photo-1547394765-185e1e68f34e?w=800&q=80",
+    ],
+    category: "bus",
+    transmission: "manual",
+    seats: 30,
+    fuelType: "diesel",
+    pricePerDay: 180000,
+    location: "Kigali",
+    rating: 4.4,
+    totalReviews: 31,
+  },
+  {
+    id: "8",
+    title: "Land Rover Defender",
+    images: [
+      "https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?w=800&q=80",
+    ],
+    category: "suv",
+    transmission: "manual",
+    seats: 7,
+    fuelType: "diesel",
+    pricePerDay: 95000,
+    location: "Rubavu",
+    rating: 4.8,
+    totalReviews: 65,
+    isFeatured: true,
   },
 ];
 
@@ -166,7 +228,7 @@ const popularDestinations = [
     description:
       "Stunning lakeside drives and relaxing beach towns along the Congo-Nile Trail.",
     image:
-      "https://images.unsplash.com/photo-1534759926189-ee5c5a3ddeee?w=800&q=80",
+      "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&q=80",
     activities: ["Beach", "Kayaking", "Congo-Nile Trail"],
   },
 ];
@@ -316,15 +378,14 @@ export default function HomePage() {
         </button>
 
         {/* Search Box Overlay */}
-        <div className="absolute bottom-0 left-0 right-0 z-20 translate-y-1/2">
-          <div className="mx-auto max-w-4xl px-4">
-            <SearchBox />
-          </div>
-        </div>
       </section>
 
-      {/* Spacer for search box overlap */}
-      <div className="h-16" />
+      {/* ===== SEARCH SECTION ===== */}
+      <section className="relative z-10 -mt-10">
+        <div className="mx-auto max-w-4xl px-4">
+          <SearchBox />
+        </div>
+      </section>
 
       {/* ===== POPULAR DESTINATIONS ===== */}
       <section className="py-16 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">

@@ -93,7 +93,7 @@ export default function VerifyOTPClient() {
 
       toast("success", "Email verified successfully!");
       if (type === "recovery") {
-        router.push("/auth/reset-password");
+        router.push("/auth/login");
       } else {
         router.push(result.redirectUrl || "/dashboard/tourist");
       }

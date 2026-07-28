@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
@@ -14,21 +14,31 @@ import {
   LogOut,
   ChevronDown,
   LayoutDashboard,
-  Settings,
+  Compass,
+  Mountain,
+  Coffee,
+  TreePine,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Avatar } from "@/components/ui/avatar";
 import { createClient } from "@/lib/supabase/client";
 
-const navLinks = [
-  { href: "/vehicles", label: "Vehicles" },
-  { href: "/destinations", label: "Destinations" },
-  { href: "/about", label: "About Rwanda" },
-  { href: "/contact", label: "Support" },
+const vehicleCategories = [
+  { slug: "suv", label: "SUV" },
+  { slug: "sedan", label: "Sedan" },
+  { slug: "van", label: "Van" },
+  { slug: "luxury", label: "Luxury" },
+  { slug: "bus", label: "Bus" },
+  { slug: "motorcycle", label: "Motorcycle" },
 ];
 
-const partnerLink = { href: "/auth/register?role=company", label: "Become a Partner" };
+const destinationItems = [
+  { slug: "volcanoes", label: "Volcanoes National Park", icon: Mountain },
+  { slug: "akagera", label: "Akagera National Park", icon: TreePine },
+  { slug: "nyungwe", label: "Nyungwe Forest", icon: Compass },
+  { slug: "lake-kivu", label: "Lake Kivu", icon: Coffee },
+];
 
 const roleDashboards: Record<string, string> = {
   tourist: "/tourist",
@@ -40,10 +50,14 @@ const roleDashboards: Record<string, string> = {
 export function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const [vehiclesOpen, setVehiclesOpen] = useState(false);
+  const [destinationsOpen, setDestinationsOpen] = useState(false);
   const [session, setSession] = useState<any>(null);
   const [profile, setProfile] = useState<any>(null);
   const pathname = usePathname();
   const router = useRouter();
+  const vehiclesRef = useRef<HTMLDivElement>(null);
+  const destinationsRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const supabase = createClient();
@@ -58,6 +72,19 @@ export function Navbar() {
           .then(({ data: p }) => setProfile(p));
       }
     });
+  }, []);
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (vehiclesRef.current && !vehiclesRef.current.contains(e.target as Node)) {
+        setVehiclesOpen(false);
+      }
+      if (destinationsRef.current && !destinationsRef.current.contains(e.target as Node)) {
+        setDestinationsOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   const handleSignOut = async () => {
@@ -85,28 +112,113 @@ export function Navbar() {
 
           {/* Desktop nav */}
           <div className="hidden md:flex items-center gap-1">
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
+            {/* Vehicles dropdown */}
+            <div className="relative" ref={vehiclesRef}>
+              <button
+                onClick={() => { setVehiclesOpen(!vehiclesOpen); setDestinationsOpen(false); }}
                 className={cn(
-                  "px-3 py-2 text-sm font-medium rounded-[10px] transition-colors",
-                  pathname === link.href || pathname.startsWith(link.href + "/")
+                  "flex items-center gap-1 px-3 py-2 text-sm font-medium rounded-[10px] transition-colors",
+                  pathname.startsWith("/vehicles")
                     ? "text-primary bg-primary/5"
                     : "text-body hover:text-heading hover:bg-gray-50"
                 )}
               >
-                {link.label}
-              </Link>
-            ))}
+                Vehicles
+                <ChevronDown className={cn("w-3.5 h-3.5 transition-transform", vehiclesOpen && "rotate-180")} />
+              </button>
+              {vehiclesOpen && (
+                <div className="absolute left-0 top-full mt-1 w-48 bg-card rounded-[16px] border border-gray-100 shadow-lg z-30 py-2">
+                  <Link
+                    href="/vehicles"
+                    onClick={() => setVehiclesOpen(false)}
+                    className="block px-4 py-2 text-sm font-medium text-primary hover:bg-gray-50"
+                  >
+                    All Vehicles
+                  </Link>
+                  <div className="border-t border-gray-100 my-1" />
+                  {vehicleCategories.map((cat) => (
+                    <Link
+                      key={cat.slug}
+                      href={`/vehicles?category=${cat.slug}`}
+                      onClick={() => setVehiclesOpen(false)}
+                      className="block px-4 py-2 text-sm text-body hover:text-heading hover:bg-gray-50"
+                    >
+                      {cat.label}
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Destinations dropdown */}
+            <div className="relative" ref={destinationsRef}>
+              <button
+                onClick={() => { setDestinationsOpen(!destinationsOpen); setVehiclesOpen(false); }}
+                className={cn(
+                  "flex items-center gap-1 px-3 py-2 text-sm font-medium rounded-[10px] transition-colors",
+                  pathname.startsWith("/destinations")
+                    ? "text-primary bg-primary/5"
+                    : "text-body hover:text-heading hover:bg-gray-50"
+                )}
+              >
+                Destinations
+                <ChevronDown className={cn("w-3.5 h-3.5 transition-transform", destinationsOpen && "rotate-180")} />
+              </button>
+              {destinationsOpen && (
+                <div className="absolute left-0 top-full mt-1 w-64 bg-card rounded-[16px] border border-gray-100 shadow-lg z-30 py-2">
+                  <Link
+                    href="/destinations"
+                    onClick={() => setDestinationsOpen(false)}
+                    className="block px-4 py-2 text-sm font-medium text-primary hover:bg-gray-50"
+                  >
+                    All Destinations
+                  </Link>
+                  <div className="border-t border-gray-100 my-1" />
+                  {destinationItems.map((dest) => (
+                    <Link
+                      key={dest.slug}
+                      href={`/destinations/${dest.slug}`}
+                      onClick={() => setDestinationsOpen(false)}
+                      className="flex items-center gap-3 px-4 py-2.5 text-sm text-body hover:text-heading hover:bg-gray-50"
+                    >
+                      <dest.icon className="w-4 h-4 text-muted" />
+                      {dest.label}
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            <Link
+              href="/about"
+              className={cn(
+                "px-3 py-2 text-sm font-medium rounded-[10px] transition-colors",
+                pathname === "/about"
+                  ? "text-primary bg-primary/5"
+                  : "text-body hover:text-heading hover:bg-gray-50"
+              )}
+            >
+              About Rwanda
+            </Link>
+            <Link
+              href="/contact"
+              className={cn(
+                "px-3 py-2 text-sm font-medium rounded-[10px] transition-colors",
+                pathname === "/contact"
+                  ? "text-primary bg-primary/5"
+                  : "text-body hover:text-heading hover:bg-gray-50"
+              )}
+            >
+              Support
+            </Link>
           </div>
 
           {/* Desktop right */}
           <div className="hidden md:flex items-center gap-2">
             {!user && (
-              <Link href={partnerLink.href}>
+              <Link href="/auth/register?role=company">
                 <Button variant="ghost" size="sm">
-                  {partnerLink.label}
+                  Become a Partner
                 </Button>
               </Link>
             )}
@@ -204,21 +316,66 @@ export function Navbar() {
         {/* Mobile menu */}
         {mobileMenuOpen && (
           <div className="md:hidden pb-4 space-y-1">
-            {navLinks.map((link) => (
+            <Link
+              href="/vehicles"
+              onClick={() => setMobileMenuOpen(false)}
+              className={cn(
+                "block px-3 py-2.5 text-sm font-medium rounded-[10px] transition-colors",
+                pathname === "/vehicles" ? "text-primary bg-primary/5" : "text-body hover:text-heading hover:bg-gray-50"
+              )}
+            >
+              All Vehicles
+            </Link>
+            {vehicleCategories.map((cat) => (
               <Link
-                key={link.href}
-                href={link.href}
+                key={cat.slug}
+                href={`/vehicles?category=${cat.slug}`}
                 onClick={() => setMobileMenuOpen(false)}
-                className={cn(
-                  "block px-3 py-2.5 text-sm font-medium rounded-[10px] transition-colors",
-                  pathname === link.href
-                    ? "text-primary bg-primary/5"
-                    : "text-body hover:text-heading hover:bg-gray-50"
-                )}
+                className="block px-3 py-2 text-sm text-body hover:text-heading hover:bg-gray-50 rounded-[10px] pl-8"
               >
-                {link.label}
+                {cat.label}
               </Link>
             ))}
+            <Link
+              href="/destinations"
+              onClick={() => setMobileMenuOpen(false)}
+              className={cn(
+                "block px-3 py-2.5 text-sm font-medium rounded-[10px] transition-colors",
+                pathname === "/destinations" ? "text-primary bg-primary/5" : "text-body hover:text-heading hover:bg-gray-50"
+              )}
+            >
+              All Destinations
+            </Link>
+            {destinationItems.map((dest) => (
+              <Link
+                key={dest.slug}
+                href={`/destinations/${dest.slug}`}
+                onClick={() => setMobileMenuOpen(false)}
+                className="block px-3 py-2 text-sm text-body hover:text-heading hover:bg-gray-50 rounded-[10px] pl-8"
+              >
+                {dest.label}
+              </Link>
+            ))}
+            <Link
+              href="/about"
+              onClick={() => setMobileMenuOpen(false)}
+              className={cn(
+                "block px-3 py-2.5 text-sm font-medium rounded-[10px] transition-colors",
+                pathname === "/about" ? "text-primary bg-primary/5" : "text-body hover:text-heading hover:bg-gray-50"
+              )}
+            >
+              About Rwanda
+            </Link>
+            <Link
+              href="/contact"
+              onClick={() => setMobileMenuOpen(false)}
+              className={cn(
+                "block px-3 py-2.5 text-sm font-medium rounded-[10px] transition-colors",
+                pathname === "/contact" ? "text-primary bg-primary/5" : "text-body hover:text-heading hover:bg-gray-50"
+              )}
+            >
+              Support
+            </Link>
             <div className="pt-3 border-t border-gray-100 space-y-2">
               {user ? (
                 <>

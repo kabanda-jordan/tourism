@@ -1,19 +1,18 @@
 "use client";
 
-import { useState } from "react";
-import { Search, SlidersHorizontal, X } from "lucide-react";
+import { useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
+import { Search } from "lucide-react";
 import { VehicleCard } from "@/components/composites/vehicle-card";
 import { Breadcrumbs } from "@/components/ui/breadcrumbs";
 import { Button } from "@/components/ui/button";
-import { Select } from "@/components/ui/select";
-import { Modal } from "@/components/ui/modal";
 import { cn } from "@/lib/utils";
 
 const vehicles = [
   {
     id: "1",
     title: "Toyota Land Cruiser V8",
-    images: ["https://images.unsplash.com/photo-1594611396050-13d7dc4bf0dc?w=800&q=80"],
+    images: ["https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=800&q=80"],
     category: "SUV",
     transmission: "Automatic",
     seats: 7,
@@ -36,6 +35,7 @@ const vehicles = [
     location: "Kigali",
     rating: 4.8,
     totalReviews: 89,
+    isFeatured: true,
   },
   {
     id: "3",
@@ -53,7 +53,7 @@ const vehicles = [
   {
     id: "4",
     title: "Subaru Forester",
-    images: ["https://images.unsplash.com/photo-1568844293986-8d0400f4745b?w=800&q=80"],
+    images: ["https://images.unsplash.com/photo-1502877338535-766e1452684a?w=800&q=80"],
     category: "SUV",
     transmission: "Automatic",
     seats: 5,
@@ -79,14 +79,14 @@ const vehicles = [
   {
     id: "6",
     title: "Range Rover Sport",
-    images: ["https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?w=800&q=80"],
+    images: ["https://images.unsplash.com/photo-1530046339160-ce3e530c7d2f?w=800&q=80"],
     category: "Luxury",
     transmission: "Automatic",
     seats: 5,
     fuelType: "Diesel",
     pricePerDay: 180000,
     location: "Kigali",
-    rating: 5.0,
+    rating: 4.9,
     totalReviews: 63,
     isFeatured: true,
   },
@@ -119,7 +119,7 @@ const vehicles = [
   {
     id: "9",
     title: "Toyota RAV4",
-    images: ["https://images.unsplash.com/photo-1568844293986-8d0400f4745b?w=800&q=80"],
+    images: ["https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?w=800&q=80"],
     category: "SUV",
     transmission: "Automatic",
     seats: 5,
@@ -129,9 +129,75 @@ const vehicles = [
     rating: 4.5,
     totalReviews: 67,
   },
+  {
+    id: "10",
+    title: "Toyota Corolla",
+    images: ["https://images.unsplash.com/photo-1590362891991-f776e747a588?w=800&q=80"],
+    category: "Sedan",
+    transmission: "Automatic",
+    seats: 5,
+    fuelType: "Petrol",
+    pricePerDay: 35000,
+    location: "Kigali",
+    rating: 4.5,
+    totalReviews: 98,
+  },
+  {
+    id: "11",
+    title: "Honda Civic",
+    images: ["https://images.unsplash.com/photo-1580273916550-e323be2ae537?w=800&q=80"],
+    category: "Sedan",
+    transmission: "Manual",
+    seats: 5,
+    fuelType: "Petrol",
+    pricePerDay: 30000,
+    location: "Huye",
+    rating: 4.4,
+    totalReviews: 56,
+  },
+  {
+    id: "12",
+    title: "Land Rover Defender",
+    images: ["https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?w=800&q=80"],
+    category: "SUV",
+    transmission: "Manual",
+    seats: 7,
+    fuelType: "Diesel",
+    pricePerDay: 95000,
+    location: "Rubavu",
+    rating: 4.8,
+    totalReviews: 65,
+    isFeatured: true,
+  },
+  {
+    id: "13",
+    title: "Bajaj Boxer Motorcycle",
+    images: ["https://images.unsplash.com/photo-1558981806-ec527fa84c39?w=800&q=80"],
+    category: "Motorcycle",
+    transmission: "Manual",
+    seats: 2,
+    fuelType: "Petrol",
+    pricePerDay: 12000,
+    location: "Kigali",
+    rating: 4.2,
+    totalReviews: 78,
+  },
+  {
+    id: "14",
+    title: "Mercedes-Benz V-Class",
+    images: ["https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=800&q=80"],
+    category: "Van",
+    transmission: "Automatic",
+    seats: 8,
+    fuelType: "Diesel",
+    pricePerDay: 90000,
+    location: "Kigali",
+    rating: 4.7,
+    totalReviews: 44,
+  },
 ];
 
-const categories = ["All", "SUV", "Luxury", "Van", "Bus", "Sedan"];
+const categories = ["All", "SUV", "Luxury", "Van", "Bus", "Sedan", "Motorcycle"];
 const locations = ["All Locations", "Kigali", "Musanze", "Rubavu", "Huye", "Kayonza"];
 const sortOptions = [
   { value: "featured", label: "Featured" },
@@ -142,11 +208,20 @@ const sortOptions = [
 ];
 
 export default function VehiclesPage() {
+  const searchParams = useSearchParams();
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("All");
   const [location, setLocation] = useState("All Locations");
   const [sort, setSort] = useState("featured");
   const [showMobileFilters, setShowMobileFilters] = useState(false);
+
+  useEffect(() => {
+    const cat = searchParams.get("category");
+    if (cat) {
+      const match = categories.find((c) => c.toLowerCase() === cat.toLowerCase());
+      if (match) setCategory(match);
+    }
+  }, [searchParams]);
 
   const filteredVehicles = vehicles
     .filter((v) => {
@@ -170,7 +245,7 @@ export default function VehiclesPage() {
       {/* Hero */}
       <div className="relative h-64 bg-gradient-to-r from-primary to-primary-dark">
         <img
-          src="https://images.unsplash.com/photo-1594611396050-13d7dc4bf0dc?w=1920&q=80"
+          src="https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=1920&q=80"
           alt="Vehicle Fleet"
           className="w-full h-full object-cover opacity-30"
         />

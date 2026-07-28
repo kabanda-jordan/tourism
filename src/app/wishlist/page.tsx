@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 import { Heart, Trash2, Car } from "lucide-react";
 import { Breadcrumbs } from "@/components/ui/breadcrumbs";
@@ -51,9 +52,9 @@ export default function WishlistPage() {
                 </div>
                 <div className="mt-3 flex items-center justify-between">
                   <p className="text-primary font-bold">{item.price.toLocaleString()} RWF<span className="text-xs font-normal text-muted">/day</span></p>
-                  <a href={`/vehicles/${item.id}`}>
+                  <Link href={`/vehicles/${item.id}`}>
                     <Button size="sm">Book Now</Button>
-                  </a>
+                  </Link>
                 </div>
               </div>
             </div>
@@ -65,12 +66,12 @@ export default function WishlistPage() {
             <Heart className="w-12 h-12 text-gray-300 mx-auto" />
             <h3 className="mt-4 text-lg font-semibold text-heading">Your wishlist is empty</h3>
             <p className="mt-1 text-sm text-muted">Browse vehicles and save your favorites</p>
-            <a href="/vehicles">
+            <Link href="/vehicles">
               <Button className="mt-4">
                 <Car className="w-4 h-4" />
                 Browse Vehicles
               </Button>
-            </a>
+            </Link>
           </div>
         )}
       </div>

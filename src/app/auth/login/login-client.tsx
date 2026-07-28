@@ -17,7 +17,7 @@ import { useToast } from "@/components/ui/toast";
 export default function LoginPageClient() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const redirect = searchParams.get("redirect") || "/dashboard/tourist";
+  const redirect = searchParams.get("redirect") || "/vehicles";
   const errorParam = searchParams.get("error");
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);

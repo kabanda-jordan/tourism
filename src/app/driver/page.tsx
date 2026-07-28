@@ -21,7 +21,7 @@ const upcomingRides = [
 
 export default function DriverDashboardPage() {
   return (
-    <div className="min-h-screen" style={{ background: "#0A0F1E" }}>
+    <div className="h-full" style={{ background: "#0A0F1E" }}>
       {/* Top Bar */}
       <div style={{ background: "#111827", borderBottom: "1px solid #1F2937" }}>
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-4">

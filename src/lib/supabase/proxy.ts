@@ -1,10 +1,15 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
+const ROLE_PATHS: Record<string, string> = {
+  "/admin": "admin",
+  "/company": "company",
+  "/driver": "driver",
+  "/tourist": "tourist",
+};
+
 export async function updateSession(request: NextRequest) {
-  let supabaseResponse = NextResponse.next({
-    request,
-  });
+  let supabaseResponse = NextResponse.next({ request });
 
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -18,9 +23,7 @@ export async function updateSession(request: NextRequest) {
           cookiesToSet.forEach(({ name, value, options }) =>
             request.cookies.set(name, value)
           );
-          supabaseResponse = NextResponse.next({
-            request,
-          });
+          supabaseResponse = NextResponse.next({ request });
           cookiesToSet.forEach(({ name, value, options }) =>
             supabaseResponse.cookies.set(name, value, options)
           );
@@ -54,7 +57,6 @@ export async function updateSession(request: NextRequest) {
   );
 
   // Auth routes that authenticated users should be redirected away from
-  // verify-2fa is excluded because users need an active session to complete 2FA
   const authRoutes = ["/auth/login", "/auth/register", "/auth/forgot-password"];
   const isAuthRoute = authRoutes.some((route) =>
     request.nextUrl.pathname.startsWith(route)
@@ -71,6 +73,38 @@ export async function updateSession(request: NextRequest) {
     const url = request.nextUrl.clone();
     url.pathname = "/";
     return NextResponse.redirect(url);
+  }
+
+  // Role-based route guard
+  if (user) {
+    const matchedRole = Object.entries(ROLE_PATHS).find(([prefix]) =>
+      request.nextUrl.pathname.startsWith(prefix)
+    );
+
+    if (matchedRole) {
+      const [, requiredRole] = matchedRole;
+
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("role")
+        .eq("id", user.id)
+        .maybeSingle();
+
+      const userRole = profile?.role || "tourist";
+
+      if (userRole !== requiredRole) {
+        const roleRedirects: Record<string, string> = {
+          admin: "/admin",
+          company: "/company",
+          driver: "/driver",
+          tourist: "/vehicles",
+        };
+
+        const url = request.nextUrl.clone();
+        url.pathname = roleRedirects[userRole] || "/vehicles";
+        return NextResponse.redirect(url);
+      }
+    }
   }
 
   return supabaseResponse;

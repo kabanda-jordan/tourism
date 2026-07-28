@@ -494,7 +494,7 @@ function getRedirectUrl(role?: string): string {
     admin: "/admin",
     company: "/company",
     driver: "/driver",
-    tourist: "/tourist",
+    tourist: "/vehicles",
   };
-  return roleRedirects[role || "tourist"] || "/tourist";
+  return roleRedirects[role || "tourist"] || "/vehicles";
 }

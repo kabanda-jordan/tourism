@@ -37,8 +37,7 @@ export default function CompanyDashboardPage() {
   const maxRevenue = Math.max(...monthlyRevenue.map((m) => m.value));
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
+    <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-bold text-heading">Company Dashboard</h1>
@@ -162,7 +161,6 @@ export default function CompanyDashboardPage() {
               </div>
             </Link>
           ))}
-        </div>
       </div>
     </div>
   );

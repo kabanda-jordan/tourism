@@ -1,22 +1,17 @@
 "use client";
 
-import { useState } from "react";
-import Link from "next/link";
+import { useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import {
   SlidersHorizontal,
-  MapPin,
   Grid3X3,
   List,
   Map,
   X,
-  ChevronDown,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
-import { Checkbox } from "@/components/ui/checkbox";
 import { VehicleCard } from "@/components/composites/vehicle-card";
-import { VehicleCardSkeleton } from "@/components/ui/skeleton";
 import { Pagination } from "@/components/ui/pagination";
 import { Breadcrumbs } from "@/components/ui/breadcrumbs";
 import { Modal } from "@/components/ui/modal";
@@ -26,7 +21,7 @@ const mockVehicles = [
   {
     id: "1",
     title: "Toyota Land Cruiser V8",
-    images: ["https://images.unsplash.com/photo-1594611396050-13d7dc4bf0dc?w=800&q=80"],
+    images: ["https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=800&q=80"],
     category: "suv",
     transmission: "automatic",
     seats: 7,
@@ -49,6 +44,7 @@ const mockVehicles = [
     location: "Kigali",
     rating: 4.8,
     totalReviews: 89,
+    isFeatured: true,
   },
   {
     id: "3",
@@ -66,7 +62,7 @@ const mockVehicles = [
   {
     id: "4",
     title: "Subaru Forester",
-    images: ["https://images.unsplash.com/photo-1568844293986-8d0400f4745b?w=800&q=80"],
+    images: ["https://images.unsplash.com/photo-1502877338535-766e1452684a?w=800&q=80"],
     category: "suv",
     transmission: "automatic",
     seats: 5,
@@ -79,7 +75,7 @@ const mockVehicles = [
   {
     id: "5",
     title: "Nissan Patrol Safari",
-    images: ["https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=800&q=80"],
+    images: ["https://images.unsplash.com/photo-1609521263047-f8f205293f24?w=800&q=80"],
     category: "suv",
     transmission: "automatic",
     seats: 7,
@@ -92,8 +88,8 @@ const mockVehicles = [
   },
   {
     id: "6",
-    title: "Hyundai Tucson",
-    images: ["https://images.unsplash.com/photo-1633789242441-8a4206346e76?w=800&q=80"],
+    title: "Toyota RAV4",
+    images: ["https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?w=800&q=80"],
     category: "suv",
     transmission: "automatic",
     seats: 5,
@@ -102,6 +98,86 @@ const mockVehicles = [
     location: "Rubavu",
     rating: 4.5,
     totalReviews: 31,
+  },
+  {
+    id: "7",
+    title: "Range Rover Sport",
+    images: ["https://images.unsplash.com/photo-1530046339160-ce3e530c7d2f?w=800&q=80"],
+    category: "luxury",
+    transmission: "automatic",
+    seats: 5,
+    fuelType: "diesel",
+    pricePerDay: 180000,
+    location: "Kigali",
+    rating: 4.9,
+    totalReviews: 63,
+    isFeatured: true,
+  },
+  {
+    id: "8",
+    title: "Toyota Corolla",
+    images: ["https://images.unsplash.com/photo-1590362891991-f776e747a588?w=800&q=80"],
+    category: "sedan",
+    transmission: "automatic",
+    seats: 5,
+    fuelType: "petrol",
+    pricePerDay: 35000,
+    location: "Kigali",
+    rating: 4.5,
+    totalReviews: 98,
+  },
+  {
+    id: "9",
+    title: "Land Rover Defender",
+    images: ["https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?w=800&q=80"],
+    category: "suv",
+    transmission: "manual",
+    seats: 7,
+    fuelType: "diesel",
+    pricePerDay: 95000,
+    location: "Rubavu",
+    rating: 4.8,
+    totalReviews: 65,
+    isFeatured: true,
+  },
+  {
+    id: "10",
+    title: "Toyota Coaster Bus",
+    images: ["https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=800&q=80"],
+    category: "bus",
+    transmission: "manual",
+    seats: 30,
+    fuelType: "diesel",
+    pricePerDay: 120000,
+    location: "Kigali",
+    rating: 4.5,
+    totalReviews: 31,
+  },
+  {
+    id: "11",
+    title: "Bajaj Boxer Motorcycle",
+    images: ["https://images.unsplash.com/photo-1558981806-ec527fa84c39?w=800&q=80"],
+    category: "motorcycle",
+    transmission: "manual",
+    seats: 2,
+    fuelType: "petrol",
+    pricePerDay: 12000,
+    location: "Kigali",
+    rating: 4.2,
+    totalReviews: 78,
+  },
+  {
+    id: "12",
+    title: "Honda Civic",
+    images: ["https://images.unsplash.com/photo-1580273916550-e323be2ae537?w=800&q=80"],
+    category: "sedan",
+    transmission: "manual",
+    seats: 5,
+    fuelType: "petrol",
+    pricePerDay: 30000,
+    location: "Huye",
+    rating: 4.4,
+    totalReviews: 56,
   },
 ];
 
@@ -135,6 +211,7 @@ const fuelFilters = [
 ];
 
 export default function SearchPage() {
+  const searchParams = useSearchParams();
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [showFilters, setShowFilters] = useState(false);
   const [sortBy, setSortBy] = useState("recommended");
@@ -144,11 +221,45 @@ export default function SearchPage() {
   const [selectedFuels, setSelectedFuels] = useState<string[]>([]);
   const [priceRange, setPriceRange] = useState({ min: "", max: "" });
 
+  useEffect(() => {
+    const cat = searchParams.get("category");
+    const loc = searchParams.get("location");
+    const cats: string[] = [];
+    if (cat) cats.push(cat.toLowerCase());
+    if (loc) {
+      const filtered = mockVehicles.filter((v) => v.location.toLowerCase() === loc.toLowerCase());
+      if (filtered.length > 0) {
+        const uniqueCats = [...new Set(filtered.map((v) => v.category))];
+        cats.push(...uniqueCats);
+      }
+    }
+    if (cats.length) setSelectedCategories([...new Set(cats)]);
+  }, [searchParams]);
+
   const toggleFilter = (value: string, setter: React.Dispatch<React.SetStateAction<string[]>>) => {
     setter((prev) =>
       prev.includes(value) ? prev.filter((v) => v !== value) : [...prev, value]
     );
   };
+
+  const filteredVehicles = mockVehicles
+    .filter((v) => {
+      if (selectedCategories.length && !selectedCategories.includes(v.category)) return false;
+      if (selectedTransmissions.length && !selectedTransmissions.includes(v.transmission)) return false;
+      if (selectedFuels.length && !selectedFuels.includes(v.fuelType)) return false;
+      if (priceRange.min && v.pricePerDay < Number(priceRange.min)) return false;
+      if (priceRange.max && v.pricePerDay > Number(priceRange.max)) return false;
+      return true;
+    })
+    .sort((a, b) => {
+      switch (sortBy) {
+        case "price-low": return a.pricePerDay - b.pricePerDay;
+        case "price-high": return b.pricePerDay - a.pricePerDay;
+        case "rating": return b.rating - a.rating;
+        case "reviews": return b.totalReviews - a.totalReviews;
+        default: return (b.isFeatured ? 1 : 0) - (a.isFeatured ? 1 : 0);
+      }
+    });
 
   const activeFilterCount =
     selectedCategories.length +
@@ -170,7 +281,7 @@ export default function SearchPage() {
                 Available Vehicles
               </h1>
               <p className="text-sm text-muted mt-1">
-                {mockVehicles.length} vehicles found in Rwanda
+                {filteredVehicles.length} vehicles found in Rwanda
               </p>
             </div>
 
@@ -315,7 +426,7 @@ export default function SearchPage() {
                     onChange={(e) => setPriceRange({ ...priceRange, min: e.target.value })}
                     className="w-full h-9 px-3 text-sm border border-gray-200 rounded-[8px] focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
                   />
-                  <span className="text-muted">—</span>
+                  <span className="text-muted">{"\u2014"}</span>
                   <input
                     type="number"
                     placeholder="Max"
@@ -343,7 +454,7 @@ export default function SearchPage() {
             </div>
           </aside>
 
-          {/* Results Grid */}
+          {/* Results */}
           <div className="flex-1">
             {/* Active filter badges */}
             {activeFilterCount > 0 && (
@@ -375,10 +486,28 @@ export default function SearchPage() {
                   : "space-y-4"
               )}
             >
-              {mockVehicles.map((vehicle) => (
+              {filteredVehicles.map((vehicle) => (
                 <VehicleCard key={vehicle.id} {...vehicle} />
               ))}
             </div>
+
+            {filteredVehicles.length === 0 && (
+              <div className="text-center py-16">
+                <p className="text-lg font-medium text-heading">No vehicles found</p>
+                <p className="mt-2 text-sm text-muted">Try adjusting your filters</p>
+                <button
+                  onClick={() => {
+                    setSelectedCategories([]);
+                    setSelectedTransmissions([]);
+                    setSelectedFuels([]);
+                    setPriceRange({ min: "", max: "" });
+                  }}
+                  className="mt-4 text-sm text-primary hover:text-primary-dark"
+                >
+                  Clear all filters
+                </button>
+              </div>
+            )}
 
             <Pagination
               currentPage={currentPage}

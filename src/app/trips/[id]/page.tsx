@@ -163,12 +163,12 @@ export default function TripDetailPage() {
             </>
           )}
           {trip.status === "completed" && (
-            <Link href={`/trips/${tripId}/review`} className="col-span-2">
+            <div className="col-span-2">
               <Button fullWidth>
                 <Star className="w-4 h-4" />
                 Leave a Review
               </Button>
-            </Link>
+            </div>
           )}
         </div>
       </div>
